@@ -6,13 +6,10 @@
 </svg>
 <script>
 async function init() {
-    data = await d3.csv("https://flunky.github.io/cars2017.csv" , function(d){
+    data = await d3.csv("https://prateekdhiman27.github.io/statesdata.csv" , function(d){
         return{
-            Make : d.Make,
-            Fuel : d.Fuel,
-            EngineCylinders : +d.EngineCylinders,
-            AverageHighwayMPG: +d.AverageHighwayMPG,
-            AverageCityMPG: +d.AverageCityMPG
+            state : d.state,
+            value: +d.value
         };
     }).then(function(data){
 
@@ -32,9 +29,9 @@ async function init() {
         .append("g")
         .attr("transform", "translate("+margin+","+margin+")")
         .selectAll("circle").data(data).enter().append("circle")
-        .attr("cx" , function(d,i) { return xScale(d.AverageCityMPG);})
-        .attr("cy", function(d,i) {return yScale(d.AverageHighwayMPG);})
-        .attr("r", function(d) {return d.EngineCylinders + 2;});
+        .attr("cx" , function(d,i) { return xScale(d.value);})
+        .attr("cy", function(d,i) {return yScale(d.value);})
+        .attr("r", function(d) {return d.value + 2;});
     
     d3.select("svg").append("g")
     .attr("transform", "translate("+margin+","+margin+")")
