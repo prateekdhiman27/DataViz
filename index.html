@@ -56,7 +56,7 @@ var svg = d3.select("body")
   .attr("height", height);
 
 // Load in my states data!
-d3.csv("statesdata.csv", function(data) {
+d3.csv("https://prateekdhiman27.github.io/statesdata.csv", function(data) {
 	var dataArray = [];
 	for (var d = 0; d < data.length; d++) {
 		dataArray.push(parseFloat(data[d].value))

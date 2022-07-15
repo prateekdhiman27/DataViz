@@ -1,153 +1,57 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
+<html>
 <script src='https://d3js.org/d3.v5.min.js'></script>
-<style type="text/css">
+<style> circle {fill: lightblue; stroke: black;} </style>
+<body onload='init()'>
+<svg width=300 height=300>
+</svg>
+<script>
+async function init() {
+    data = await d3.csv("https://flunky.github.io/cars2017.csv" , function(d){
+        return{
+            Make : d.Make,
+            Fuel : d.Fuel,
+            EngineCylinders : +d.EngineCylinders,
+            AverageHighwayMPG: +d.AverageHighwayMPG,
+            AverageCityMPG: +d.AverageCityMPG
+        };
+    }).then(function(data){
 
-/* Legend Font Style */
-body {
-	font: 11px sans-serif;
-	background-color: #ffffff;
-}
-        
-/* Legend Position Style */
-.legend {
-	position:absolute;
-	left:20px;
-	top:30px;
-}
+    console.log(data[0]);
 
-.axis text {
-	font: 10px sans-serif;
-}
+    var margin = 50;
+    var w = 200;
+    var h = 200;
 
-.axis line, .axis path {
-	fill: none;
-	stroke: #000;
-	shape-rendering: crispEdges;
-}
+    var xScale = d3.scaleLog().domain([10,150]).range([0,w]);
+    var yScale = d3.scaleLog().domain([10,150]).range([h,0]);
 
-</style>
-</head>
-<body>
-<script type="text/javascript">
-		
-//Width and height of map
-var width = 960;
-var height = 500;
-
-var lowColor = '#f9f9f9'
-var highColor = '#bc2a66'
-
-// D3 Projection
-var projection = d3.geoAlbersUsa()
-  .translate([width / 2, height / 2]) // translate to center of screen
-  .scale([1000]); // scale things down so see entire US
-
-// Define path generator
-var path = d3.geoPath() // path generator that will convert GeoJSON to SVG paths
-  .projection(projection); // tell path generator to use albersUsa projection
-
-//Create SVG element and append map to the SVG
-var svg = d3.select("body")
-  .append("svg")
-  .attr("width", width)
-  .attr("height", height);
-
-// Load in my states data!
-d3.csv("https://prateekdhiman27.github.io/statedata.csv", function(data) {
-	var dataArray = [];
-	for (var d = 0; d < data.length; d++) {
-		dataArray.push(parseFloat(data[d].value))
-	}
-	var minVal = d3.min(dataArray)
-	var maxVal = d3.max(dataArray)
-	var ramp = d3.scaleLinear().domain([minVal,maxVal]).range([lowColor,highColor])
-	
-  // Load GeoJSON data and merge with states data
-  d3.json("us-states.json", function(json) {
-
-    // Loop through each state data value in the .csv file
-    for (var i = 0; i < data.length; i++) {
-
-      // Grab State Name
-      var dataState = data[i].state;
-
-      // Grab data value 
-      var dataValue = data[i].value;
-
-      // Find the corresponding state inside the GeoJSON
-      for (var j = 0; j < json.features.length; j++) {
-        var jsonState = json.features[j].properties.name;
-
-        if (dataState == jsonState) {
-
-          // Copy the data value into the JSON
-          json.features[j].properties.value = dataValue;
-
-          // Stop looking through the JSON
-          break;
-        }
-      }
-    }
-
-    // Bind the data to the SVG and create one path per GeoJSON feature
-    svg.selectAll("path")
-      .data(json.features)
-      .enter()
-      .append("path")
-      .attr("d", path)
-      .style("stroke", "#fff")
-      .style("stroke-width", "1")
-      .style("fill", function(d) { return ramp(d.properties.value) });
+    console.log(xScale[0]);
+    d3.select("svg")
+ //       .attr("width" , w + 2*margin)
+ //       .attr("height" , h + 2*margin)
+        .append("g")
+        .attr("transform", "translate("+margin+","+margin+")")
+        .selectAll("circle").data(data).enter().append("circle")
+        .attr("cx" , function(d,i) { return xScale(d.AverageCityMPG);})
+        .attr("cy", function(d,i) {return yScale(d.AverageHighwayMPG);})
+        .attr("r", function(d) {return d.EngineCylinders + 2;});
     
-		// add a legend
-		var w = 140, h = 300;
+    d3.select("svg").append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .call(d3.axisLeft(yScale).tickValues([10, 20, 50, 100])
+    .tickFormat(d3.format("~s")));
 
-		var key = d3.select("body")
-			.append("svg")
-			.attr("width", w)
-			.attr("height", h)
-			.attr("class", "legend");
-
-		var legend = key.append("defs")
-			.append("svg:linearGradient")
-			.attr("id", "gradient")
-			.attr("x1", "100%")
-			.attr("y1", "0%")
-			.attr("x2", "100%")
-			.attr("y2", "100%")
-			.attr("spreadMethod", "pad");
-
-		legend.append("stop")
-			.attr("offset", "0%")
-			.attr("stop-color", highColor)
-			.attr("stop-opacity", 1);
-			
-		legend.append("stop")
-			.attr("offset", "100%")
-			.attr("stop-color", lowColor)
-			.attr("stop-opacity", 1);
-
-		key.append("rect")
-			.attr("width", w - 100)
-			.attr("height", h)
-			.style("fill", "url(#gradient)")
-			.attr("transform", "translate(0,10)");
-
-		var y = d3.scaleLinear()
-			.range([h, 0])
-			.domain([minVal, maxVal]);
-
-		var yAxis = d3.axisRight(y);
-
-		key.append("g")
-			.attr("class", "y axis")
-			.attr("transform", "translate(41,10)")
-			.call(yAxis)
-  });
+    d3.select("svg").append("g")
+    .attr("transform", "translate("+margin+","+(h+margin)+")")
+    .call(d3.axisBottom(xScale).tickValues([10, 20, 50, 100])
+    .tickFormat(d3.format("~s")));
+    
+    return data;
 });
+
+}
+
+
 </script>
 </body>
 </html>
