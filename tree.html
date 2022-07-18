@@ -35,15 +35,16 @@
 // ************** Generate the tree diagram	 *****************
 var margin = {top: 20, right: 120, bottom: 20, left: 120},
 	width = 960 - margin.right - margin.left,
-	height = 500 - margin.top - margin.bottom;
-	
+	height = 500 - margin.top - margin.bottom,
+	rectW = 60,
+    rectH = 30;
 var i = 0;
 
 var tree = d3.layout.tree()
 	.size([height, width]);
 
 var diagonal = d3.svg.diagonal()
-	.projection(function(d) { return [d.y, d.x]; });
+	.projection(function(d) { return [d.x + rectW / 2, d.y + rectH / 2]; });
 
 var svg = d3.select("body").append("svg")
 	.attr("width", width + margin.right + margin.left)
@@ -52,7 +53,7 @@ var svg = d3.select("body").append("svg")
 	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
 // load the external data
-d3.csv("treedata.csv", function(error, data) {
+d3.csv("https://prateekdhiman27.github.io/treedata.csv", function(error, data) {
 
 // *********** Convert flat data into a nice tree ***************
 // create a name: node map
