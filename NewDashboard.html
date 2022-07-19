@@ -92,7 +92,212 @@
 </svg>
 <script>
 async function init() {
-    data = await d3.csv("https://prateekdhiman27.github.io/men_wimbledon.csv" , function(d){
+    var data_mwimbledon = d3.csv("https://prateekdhiman27.github.io/men_wimbledon.csv");
+    var data_brackets = d3.csv("https://prateekdhiman27.github.io/flare.csv");
+
+    Promise.all([data_mwimbledon, data_brackets]).then(function(data) {
+        console.log(data[0][0])  // first row of wimbledon
+        console.log(data[1][0])  // first row of structure
+
+        // ------------------------ Slider ----------------------------------------------
+        // Variable declarations for Slider
+    
+        var formatDateIntoYear = d3.timeFormat("%Y");
+        var formatDate = d3.timeFormat("%b %Y");
+        var parseDate = d3.timeParse("%d/%m/%y");
+        
+        var startDate = new Date("2001-06-25"),
+            endDate = new Date("2022-06-27");
+        
+        var margin = {top:50, right:50, bottom:0, left:50},
+            width = 1800 - margin.left - margin.right,
+            height = 900 - margin.top - margin.bottom;
+        
+        var moving = false;
+        var currentValue = 0;
+        var targetValue = width;
+        
+        var playButton = d3.select("#play-button");
+
+        // x axis for slider
+        var x = d3.scaleTime()
+          .domain([startDate, endDate])
+          .range([0, targetValue])
+          .clamp(true);
+    
+        var slider = d3.select("svg")
+        .append("g")
+        .attr("class", "slider")
+        .attr("transform", "translate(" + margin.left + "," + (height-100) + ")")
+
+        slider.append("line")
+            .attr("class", "track")
+            .attr("x1", x.range()[0])
+            .attr("x2", x.range()[1])
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-inset")
+            .select(function() { return this.parentNode.appendChild(this.cloneNode(true)); })
+            .attr("class", "track-overlay")
+            .call(d3.drag().on("start.interrupt", function() { slider.interrupt(); })
+                .on("start drag", function() {
+                    currentValue = d3.event.x;
+                    update(x.invert(currentValue)); 
+                })
+            );
+    
+        slider.insert("g", ".track-overlay")
+            .attr("class", "ticks")
+            .attr("transform", "translate(0," + 18 + ")")
+            .selectAll("text")
+            .data(x.ticks(20))
+            .enter()
+            .append("text")
+            .attr("x", x)
+            .attr("y", 10)
+            .attr("text-anchor", "middle")
+            .text(function(d) { return formatDateIntoYear(d); });
+      
+        var handle = slider.insert("circle", ".track-overlay")
+            .attr("class", "handle")
+            .attr("r", 9);
+      
+        var label = slider.append("text")  
+            .attr("class", "label")
+            .attr("text-anchor", "middle")
+            .text(formatDateIntoYear(startDate))
+            .attr("transform", "translate(0," + (-25) + ")")
+
+        
+        // Trying to Plot something from wimbledon data ------------------------------------------
+        var dataset = data[0];
+
+        var plot = d3.select("svg")
+        .append("g")
+        .attr("class", "plot")
+        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+        drawPlot(dataset);
+        playButton.on("click" , function(){
+            var button = d3.select(this);
+            if (button.text() == "Pause") {
+                moving = false;
+                clearInterval(timer);
+                // timer = 0;
+                button.text("Play");
+            } else {
+                moving = true;
+                timer = setInterval(step, 100);
+                button.text("Pause");
+            }
+            console.log("Slider moving: " + moving);
+        })
+
+        function prepare(d) {
+            d.id = d.id;
+            d.date = parseDate(d.date);
+            return d;
+        }
+  
+        function step() {
+            update(x.invert(currentValue));
+            currentValue = currentValue + (targetValue/151);
+            if (currentValue > targetValue) {
+                moving = false;
+                currentValue = 0;
+                clearInterval(timer);
+                // timer = 0;
+                playButton.text("Play");
+                console.log("Slider moving: " + moving);
+            }
+        }
+
+        function update(h) {
+            // update position and text of label according to slider scale
+            handle.attr("cx", x(h));
+            label
+            .attr("x", x(h))
+            .text(formatDateIntoYear(h));
+
+            // filter data set and redraw plot
+            var newData = dataset.filter(function(d) {
+            return d.date < h;
+            })
+            drawPlot(newData);
+        }
+
+    /// This function updates based on slider -----------------------------------------
+        function drawPlot(data) {
+            var locations = plot.selectAll(".location")
+                .data(data);
+
+        // if filtered dataset has more circles than already existing, transition new ones in
+        locations.enter()
+            .append("circle")
+            .attr("class", "location")
+            .attr("cx", function(d) { return x(d.date); })
+            .attr("cy", height/2)
+            .style("fill", function(d) { return d3.hsl(d.date/1000000000, 0.8, 0.8)})
+            .style("stroke", function(d) { return d3.hsl(d.date/1000000000, 0.7, 0.7)})
+            .style("opacity", 0.5)
+            .attr("r", 8)
+            .transition()
+            .duration(400)
+            .attr("r", 25)
+                .transition()
+                .attr("r", 8);
+
+        // if filtered dataset has less circles than already existing, remove excess
+        locations.exit()
+            .remove();
+        }
+        
+        // ------------------------- Trying to generate radial TREE for tournament --------------------------------
+
+        var radial = d3.select("svg")
+        .append("g")
+        .attr("class", "radial")
+        .attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+
+        var stratify = d3.stratify()
+        .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
+
+        var tree = d3.tree()
+        .size([2 * Math.PI, 500])
+        .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+        var root = tree(stratify(data[1]));
+
+        var link = radial.selectAll(".link")
+        .data(root.links())
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("d", d3.linkRadial()
+            .angle(function(d) { return d.x; })
+            .radius(function(d) { return d.y; }));
+
+        var node = radial.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+            .attr("transform", function(d) { return "translate(" + radialPoint(d.x, d.y) + ")"; });
+
+        node.append("circle")
+            .attr("r", 2.5);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", function(d) { return d.x < Math.PI === !d.children ? 6 : -6; })
+            .attr("text-anchor", function(d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
+            .attr("transform", function(d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ")"; })
+            .text(function(d) { return d.id.substring(d.id.lastIndexOf(".") + 1); });
+
+        function radialPoint(x, y) {
+            return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
+}
+        // Last line of Promise - after this end of init function and end of script
+    });
+
+  /*  data = await d3.csv("https://prateekdhiman27.github.io/men_wimbledon.csv" , function(d){
         return{
             date : d.date,
             ATP : +d.ATP,
@@ -250,12 +455,57 @@ async function init() {
         }
     // ------------------- tree -----------------------
 
+    var radial = d3.select("svg")
+        .append("g")
+        .attr("class", "radial")
+        .attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
     
+    var stratify = d3.stratify()
+    .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
 
+    var tree = d3.tree()
+    .size([2 * Math.PI, 500])
+    .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
+
+    d3.csv("https://prateekdhiman27.github.io/flare.csv", function(error, newdata) {
+        if (error) throw error;
+
+        var root = tree(stratify(newdata));
+
+        var link = radial.selectAll(".link")
+        .data(root.links())
+        .enter().append("path")
+        .attr("class", "link")
+        .attr("d", d3.linkRadial()
+            .angle(function(d) { return d.x; })
+            .radius(function(d) { return d.y; }));
+
+        var node = radial.selectAll(".node")
+            .data(root.descendants())
+            .enter().append("g")
+            .attr("class", function(d) { return "node" + (d.children ? " node--internal" : " node--leaf"); })
+            .attr("transform", function(d) { return "translate(" + radialPoint(d.x, d.y) + ")"; });
+
+        node.append("circle")
+            .attr("r", 2.5);
+
+        node.append("text")
+            .attr("dy", "0.31em")
+            .attr("x", function(d) { return d.x < Math.PI === !d.children ? 6 : -6; })
+            .attr("text-anchor", function(d) { return d.x < Math.PI === !d.children ? "start" : "end"; })
+            .attr("transform", function(d) { return "rotate(" + (d.x < Math.PI ? d.x - Math.PI / 2 : d.x + Math.PI / 2) * 180 / Math.PI + ")"; })
+            .text(function(d) { return d.id.substring(d.id.lastIndexOf(".") + 1); });
+        });
+
+    function radialPoint(x, y) {
+    return [(y = +y) * Math.cos(x -= Math.PI / 2), y * Math.sin(x)];
+}
     //// All code above this line.
 });
+*/
 
-}
+
+}  // Closing for Init function. Do not delete.
 
 
 </script>
