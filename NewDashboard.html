@@ -12,7 +12,7 @@
       
         #play-button {
             position: absolute;
-            top: 850px;
+            top: 890px;
             left: 50px;
             background: #0f3b81;
             padding-right: 26px;
@@ -93,7 +93,7 @@
 <script>
 async function init() {
     var data_mwimbledon = d3.csv("https://prateekdhiman27.github.io/men_wimbledon.csv");
-    var data_brackets = d3.csv("https://prateekdhiman27.github.io/flare.csv");
+    var data_brackets = d3.csv("https://prateekdhiman27.github.io/brackets.csv");
 
     Promise.all([data_mwimbledon, data_brackets]).then(function(data) {
         console.log(data[0][0])  // first row of wimbledon
@@ -115,7 +115,7 @@ async function init() {
         
         var moving = false;
         var currentValue = 0;
-        var targetValue = width;
+        var targetValue = width - 800;
         
         var playButton = d3.select("#play-button");
 
@@ -128,7 +128,7 @@ async function init() {
         var slider = d3.select("svg")
         .append("g")
         .attr("class", "slider")
-        .attr("transform", "translate(" + margin.left + "," + (height-100) + ")")
+        .attr("transform", "translate(" + margin.left + "," + (height-60) + ")")
 
         slider.append("line")
             .attr("class", "track")
@@ -256,13 +256,13 @@ async function init() {
         var radial = d3.select("svg")
         .append("g")
         .attr("class", "radial")
-        .attr("transform", "translate(" + (width / 2 + 40) + "," + (height / 2 + 90) + ")");
+        .attr("transform", "translate(" + (width / 2 - 400) + "," + (height / 2 - 50 ) + ")");
 
         var stratify = d3.stratify()
         .parentId(function(d) { return d.id.substring(0, d.id.lastIndexOf(".")); });
 
         var tree = d3.tree()
-        .size([2 * Math.PI, 500])
+        .size([2 * Math.PI, 280])
         .separation(function(a, b) { return (a.parent == b.parent ? 1 : 2) / a.depth; });
 
         var root = tree(stratify(data[1]));
