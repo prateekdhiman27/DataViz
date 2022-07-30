@@ -1,0 +1,63 @@
+<html>
+<script src='https://d3js.org/d3.v5.min.js'></script>
+<style> circle {fill: lightblue; stroke: black;} </style>
+<body onload='init()'>
+<svg width=500 height=500>
+</svg>
+<script>
+async function init() {
+    data = await d3.csv("https://prateekdhiman27.github.io/men_wimbledon.csv" , function(d){
+        return{
+            WRank : +d.WRank,
+            year : d.date,
+            Winner : d.Winner,
+
+        };
+    }).then(function(data){
+    
+    var formatDateIntoYear = d3.timeFormat("%Y");
+    console.log(data[0]);
+    //console.log("printing date "+formatDateIntoYear(d.date));
+
+    var margin = 50;
+    var w = 200;
+    var h = 200;
+
+    var targetValue = 400;
+    var startDate = new Date("2001-06-25"),
+            endDate = new Date("2022-06-27");
+
+    var yScale = d3.scaleBand().domain([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]).range([0,w]);
+    var xScale = d3.scaleTime()
+          .domain([startDate, endDate])
+          .range([0, targetValue])
+          .clamp(true);
+
+
+    d3.select("svg")
+ //       .attr("width" , w + 2*margin)
+ //       .attr("height" , h + 2*margin)
+        .append("g")
+        .attr("transform", "translate("+margin+","+margin+")")
+        .selectAll("circle").data(data).enter().append("circle")
+        .attr("cx" , function(d,i) { return xScale(formatDateIntoYear(d.date));})
+        .attr("cy", function(d,i) {return yScale(d.WRank);})
+        .attr("r", function(d) {return 2;});
+    
+    d3.select("svg").append("g")
+    .attr("transform", "translate("+margin+","+margin+")")
+    .call(d3.axisLeft(yScale));
+
+    d3.select("svg").append("g")
+    .attr("transform", "translate("+margin+","+(h+margin)+")")
+    .call(d3.axisBottom(xScale));
+    
+    return data;
+});
+
+}
+
+
+</script>
+</body>
+</html>
