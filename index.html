@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="description" content="">
+	<title>Wimbledon : Path to Championship</title>
+	<link rel="stylesheet" href="css/style.css">
+    <h1 style="text-align:left;">Wimbledon : Path to "The Finals"
+        <a class="navbar-brand" href="#"><img id="logo" src="img/path.png"></a>    
+    </h1> 
+</head>
+
+<body>
+    <div id="container" class="container">
+
+    <!-- Section 1 with Chart Area -->
+        <section id = "section1">
+            <h1 class = "first-section"> Current and Past Winners</h1>
+            <p> Lets Look at our current and past Winner , starting with Total Number of Titles Won from 2001 to 2022!. Click Next to see thier path to Victory!</p> 
+
+            <div id="vis">
+                <button id="next-button" onclick="window.location.href='IndexPg2.html'">Next</button>
+            </div>
+            <div class="grid-container">
+
+                <div id="barchart1" class="barchart1">
+                </div>
+            
+                <div id="factarea1" class="factarea1">
+                    
+                </div>
+              
+            </div>
+            <!-- removing select button. Legend handles the selection -->
+            <!--  <div id="select">
+                <select id="selectButton"></select>
+            </div> -->
+            
+
+
+
+        </section>
+
+</div>
+    	<!-- External JS libraries -->
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
+        <!-- End Sem Project Main Js -->
+        <script src="/Users/I059792/Library/CloudStorage/OneDrive-SAPSE/Documents/My_Docs/P/MCS DS/CS 416 Data Visualization/d3 udemy/project/js/barchart.js"></script>
+</body>
+</html>
