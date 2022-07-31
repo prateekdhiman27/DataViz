@@ -62,7 +62,7 @@ const SetLabel1 = secondsvg.append("text")
 //-----------------------------------------------------------
 
 var xBScale = d3.scaleTime()
-.domain([2001, 12000])
+.domain([2001, 2022])
 .range([ 0, width ]);
 secondsvg.append("g")
 .attr("transform", "translate(0," + height + ")")
