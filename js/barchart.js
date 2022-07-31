@@ -131,9 +131,9 @@ secondsvg.append('g')
   .attr("r", function (d) { return zBscale(d.TitleCount); } )
   .style("fill", function (d) { return myColor(d.Winner); } )
 // -3- Trigger the functions
-.on("mouseover", showTooltip )
-.on("mousemove", moveTooltip )
-.on("mouseleave", hideTooltip )
+.on("mouseover", showTooltip2 )
+.on("mousemove", moveTooltip2 )
+.on("mouseleave", hideTooltip2 )
 
   // ----------------
   // Create a tooltip
