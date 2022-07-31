@@ -13,6 +13,10 @@
         .attr("transform",
               "translate(" + margin.left + "," + margin.top + ")");
     
+    const secondsvg = d3.select("#factarea1").append("svg") 
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    
     // Parse the Data
     d3.csv("https://prateekdhiman27.github.io/data/onlywinner.csv", function(data) {
 
@@ -21,9 +25,7 @@
   //        Second Scene on this page - Details / Facts / Numbers
   //--------------------------------------------------------------------------------
 
-  const secondsvg = d3.select("#factarea1").append("svg") 
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
+
 
 const SetLabel1 = secondsvg.append("text")
 	.attr("y", height - 350)
@@ -54,6 +56,83 @@ for (var i = 0; i < yearwinner.length; i++) {
   console.log("-----------for loop winner----------"+yearwinner2[i].Winner)
   SetLabel2.text("Novak Djokovic won: " +yearwinner2[i].TitleCount)
 }
+
+//-----------------------------------------------------------
+// -----------------------Second Scene Bubble Chart ---------------------
+//-----------------------------------------------------------
+
+var xBScale = d3.scaleTime()
+.domain([2001, 12000])
+.range([ 0, width ]);
+secondsvg.append("g")
+.attr("transform", "translate(0," + height + ")")
+.call(d3.axisBottom(xBScale));
+
+// Add Y axis
+var yBscale = d3.scaleLinear()
+.domain([0, 10])
+.range([ height, 0]);
+secondsvg.append("g")
+.call(d3.axisLeft(yBscale));
+
+// Add a scale for bubble size
+var zBscale = d3.scaleLinear()
+.domain([200000, 1310000000])
+.range([ 4, 40]);
+
+// Add a scale for bubble color
+var myColor = d3.scaleOrdinal()
+.domain(["Djokovic N.", "Federer R.", "Murray A.", "Nadal R.", "Hewitt L." , "Ivanisevic G."])
+.range(d3.schemeSet2);
+
+  // -1- Create a tooltip div that is hidden by default:
+  var tooltip2 = d3.select("#factarea1")
+    .append("div")
+      .style("opacity", 0)
+      .attr("class", "tooltip")
+      .style("background-color", "black")
+      .style("border-radius", "5px")
+      .style("padding", "10px")
+      .style("color", "white")
+
+// -2- Create 3 functions to show / update (when mouse move but stay on same circle) / hide the tooltip
+var showTooltip2 = function(d) {
+  tooltip2
+    .transition()
+    .duration(200)
+  tooltip2
+    .style("opacity", 1)
+    .html("Winner: " + d.Winner)
+    .style("left", (d3.mouse(this)[0]+30) + "px")
+    .style("top", (d3.mouse(this)[1]+30) + "px")
+}
+var moveTooltip2 = function(d) {
+  tooltip2
+    .style("left", (d3.mouse(this)[0]+30) + "px")
+    .style("top", (d3.mouse(this)[1]+30) + "px")
+}
+var hideTooltip2 = function(d) {
+  tooltip2
+    .transition()
+    .duration(200)
+    .style("opacity", 0)
+}
+
+// Add dots
+secondsvg.append('g')
+.selectAll("dot")
+.data(data)
+.enter()
+.append("circle")
+  .attr("class", "bubbles")
+  .attr("cx", function (d) { return x(d.Year); } )
+  .attr("cy", function (d) { return y(d.TitleCount); } )
+  .attr("r", function (d) { return z(d.TitleCount); } )
+  .style("fill", function (d) { return myColor(d.Winner); } )
+// -3- Trigger the functions
+.on("mouseover", showTooltip )
+.on("mousemove", moveTooltip )
+.on("mouseleave", hideTooltip )
 
   // ----------------
   // Create a tooltip
