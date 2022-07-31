@@ -43,19 +43,19 @@ const SetLabel1 = secondsvg.append("text")
 	.attr("text-anchor", "end")
   //.text("hellp 2")
 
-var yearwinner = data.filter(function(d) {return (d.Year==2017 && d.Winner =='Federer R.') } )
+// var yearwinner = data.filter(function(d) {return (d.Year==2017 && d.Winner =='Federer R.') } )
   
-for (var i = 0; i < yearwinner.length; i++) {
-  console.log("-----------for loop winner----------"+yearwinner[i].Winner)
-  SetLabel1.text("Roger Federer won: " +yearwinner[i].TitleCount )
-}
+// for (var i = 0; i < yearwinner.length; i++) {
+//   console.log("-----------for loop winner----------"+yearwinner[i].Winner)
+//   SetLabel1.text("Roger Federer won: " +yearwinner[i].TitleCount )
+// }
 
-var yearwinner2 = data.filter(function(d) {return (d.Year==2022 && d.Winner =='Djokovic N.') } )
+// var yearwinner2 = data.filter(function(d) {return (d.Year==2022 && d.Winner =='Djokovic N.') } )
   
-for (var i = 0; i < yearwinner.length; i++) {
-  console.log("-----------for loop winner----------"+yearwinner2[i].Winner)
-  SetLabel2.text("Novak Djokovic won: " +yearwinner2[i].TitleCount)
-}
+// for (var i = 0; i < yearwinner.length; i++) {
+//   console.log("-----------for loop winner----------"+yearwinner2[i].Winner)
+//   SetLabel2.text("Novak Djokovic won: " +yearwinner2[i].TitleCount)
+// }
 
 //-----------------------------------------------------------
 // -----------------------Second Scene Bubble Chart ---------------------
