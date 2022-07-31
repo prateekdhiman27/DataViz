@@ -62,11 +62,11 @@ const SetLabel1 = secondsvg.append("text")
 //-----------------------------------------------------------
 
 var xBScale = d3.scaleLinear()
-.domain([2001, 2022])
+.domain([2000, 2022])
 .range([ 0, width ]);
 secondsvg.append("g")
 .attr("transform", "translate(0," + height + ")")
-.call(d3.axisBottom(xBScale));
+.call(d3.axisBottom(xBScale).tickFormat(d3.format("d")));
 
 // Add Y axis
 var yBscale = d3.scaleLinear()
@@ -77,7 +77,7 @@ secondsvg.append("g")
 
 // Add a scale for bubble size
 var zBscale = d3.scaleLinear()
-.domain([200000, 1310000000])
+.domain([0, 10])
 .range([ 4, 40]);
 
 // Add a scale for bubble color
