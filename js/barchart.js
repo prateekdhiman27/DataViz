@@ -61,7 +61,7 @@ const SetLabel1 = secondsvg.append("text")
 // -----------------------Second Scene Bubble Chart ---------------------
 //-----------------------------------------------------------
 
-var xBScale = d3.scaleTime()
+var xBScale = d3.scaleLinear()
 .domain([2001, 2022])
 .range([ 0, width ]);
 secondsvg.append("g")
