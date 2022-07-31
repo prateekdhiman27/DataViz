@@ -83,7 +83,8 @@ var zBscale = d3.scaleLinear()
 // Add a scale for bubble color
 var myColor = d3.scaleOrdinal()
 .domain(["Djokovic N.", "Federer R.", "Murray A.", "Nadal R.", "Hewitt L." , "Ivanisevic G."])
-.range(d3.schemeSet2);
+.range(['#007b22', '#b8babd','#007b22', '#b8babd','#007b22', '#b8babd']);
+
 
   // -1- Create a tooltip div that is hidden by default:
   var tooltip2 = d3.select("#factarea1")
