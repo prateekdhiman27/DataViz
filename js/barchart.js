@@ -83,7 +83,7 @@ var zBscale = d3.scaleLinear()
 // Add a scale for bubble color
 var myColor = d3.scaleOrdinal()
 .domain(["Djokovic N.", "Federer R.", "Murray A.", "Nadal R.", "Hewitt L." , "Ivanisevic G."])
-.range(['#007b22', '#b8babd','#007b22', '#b8babd','#007b22', '#b8babd']);
+.range(['#4f8950', '#b8babd','#4f8987', '#7f5757','#007b22', '#008cff']);
 
 
   // -1- Create a tooltip div that is hidden by default:
@@ -309,7 +309,7 @@ const yLabel = svg.append("text")
       .append("rect")
         .attr("x", function(d) { return x(d.Winner); })
         .attr("width", x.bandwidth)
-        .attr("fill", "#007b22")
+        .attr("fill", function (d) { return myColor(d.Winner); } )
         // no bar at the beginning thus:
         .attr("height", function(d) { return height - y(0); }) // always equal to 0
         .attr("y", function(d) { return y(0); })

@@ -93,6 +93,11 @@ pointer-events: all;
   stroke: #fff;
 }
 
+.dottest {
+  fill: #7f5757;
+  stroke: #fff;
+}
+
 .focus circle {
 fill: none;
 stroke: steelblue;
@@ -140,4 +145,12 @@ text.title {
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-gap: 20px;
+}
+
+.bubbles {
+  stroke-width: 2px;
+  stroke: white;
+}
+.bubbles:hover {
+  stroke: black;
 }
