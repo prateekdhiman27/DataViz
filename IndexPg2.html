@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8">
 	<meta name="description" content="">
-	<title>Wimbledon : Path to Championship</title>
+	<title>Wimbledon</title>
 	<link rel="stylesheet" href="css/style.css">
-    <h1 style="text-align:left;">Wimbledon : Path to "The Finals"
+    <h1 style="text-align:left;">Wimbledon : Over the years..."
         <a class="navbar-brand" href="#"><img id="logo" src="img/path.png"></a>    
     </h1> 
 </head>
@@ -19,37 +19,44 @@
             <p> Click the PLAY button to see which opponents the highlighted year champ had to defeat. General Assumption is that higher seeded players are difficult to defeat and hence the color code for chart area.</p>
 
             <div id="vis">
-                <button id="back-button" onclick="history.back()">Previous</button>
+                <button id="back-button" onclick="window.location.href='index.html'">Previous</button>
+            
+                &nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<label>Select any year from drop down to see details for a particular year <select id="selectYearButton"></select> </label>
 
             </div>
             
-            <div id="chart-area">
-            </div>
+            <div class="grid-container">
 
-            <div id="slider-area">
+                <div id="chart-area" class="chart-area">
+                </div>
+            
+                <div id="chart-bar">
+                </div>
+
+            </div>
+            <div id="slider-area" class="slider-area">
                 <button id="play-button">Play</button>
+
+                
             </div>
-            
         </section>
 
-        <section id="section2">
+<!--        <section id="section2">
             <h1 class = "second-section"> Match Analysis for each Round</h1>
             <p> This bar chart shows head to head match and thier set scores with Tooltips</p>
-            <div id="chart-bar">
-                <select id="selectYearButton"></select>
-            </div>
+ 
             <div id="set-area">
             </div>
 
 
 
-        </section>
+        </section>-->
 
 </div>
     	<!-- External JS libraries -->
         <script src="https://d3js.org/d3.v5.min.js"></script>
         <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
         <!-- End Sem Project Main Js -->
-        <script src="https://prateekdhiman27.github.io/js/main.js"></script>
+        <script src="js/main.js"></script>
 </body>
 </html>

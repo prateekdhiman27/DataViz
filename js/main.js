@@ -17,8 +17,8 @@ var slideryear = 2001; // to be updated based on data.
 clearAll = []
 
 var margin = {top:50, right:50, bottom:0, left:50},
-    width = 900 - margin.left - margin.right,
-    height = 600 - margin.top - margin.bottom; //550
+    width = 700 - margin.left - margin.right,
+    height = 550 - margin.top - margin.bottom; //500
 
 
 const slidersvg = d3.select("#slider-area").append("svg") 
@@ -98,7 +98,7 @@ var label = slider.append("text")
 
 var linechart = svg.append("g")
 .attr("class", "line-chart")
-.attr("transform", "translate(" + (margin.left+50)+ "," + (height-550) + ")");
+.attr("transform", "translate(" + (margin.left+50)+ "," + (height-500) + ")");
 
 
 var line = linechart
@@ -127,7 +127,7 @@ const ySubLabel1 = linechart.append("text")
 	.attr("transform", "rotate(-90)")
 	.attr("y", -30)
 	.attr("x", -((height/2)-150))
-	.attr("font-size", "15px")
+	.attr("font-size", "12px")
 	.attr("text-anchor", "middle")
   .attr("fill", "red")
   .attr("opacity", "0.4")
@@ -137,7 +137,7 @@ const ySubLabel2 = linechart.append("text")
 	.attr("transform", "rotate(-90)")
 	.attr("y", -30)
 	.attr("x", -((height/2)+110))
-	.attr("font-size", "15px")
+	.attr("font-size", "12px")
 	.attr("text-anchor", "start")
   .attr("fill", "gold")
   .attr("opacity", "0.7")
@@ -147,7 +147,7 @@ const ySubLabel3 = linechart.append("text")
 	.attr("transform", "rotate(-90)")
 	.attr("y", -30)
 	.attr("x", -((height/2)+120))
-	.attr("font-size", "15px")
+	.attr("font-size", "12px")
 	.attr("text-anchor", "end")
   .attr("fill", "green")
   .attr("opacity", "0.4")
@@ -155,10 +155,11 @@ const ySubLabel3 = linechart.append("text")
 
 
 const playerLabel = linechart.append("text")
-	.attr("y", height - 520)
-	.attr("x", width - 550)
+	.attr("y", height - 450)
+	.attr("x", width/2)
+  .style('fill', '#007b22')
 	.attr("font-size", "30px")
-	.attr("opacity", "0.4")
+	.attr("opacity", "1")
 	.attr("text-anchor", "middle")
 
 const ranklabel = linechart.append("text")
@@ -190,28 +191,33 @@ const yScaleGroup = linechart.append("g")
   // Tooltip
 var tooltip = d3.select("body").append("div")
   .attr("class", "tooltip")
-  .style("opacity", 0);
+  .style("opacity", 0)
+
 
 var globallinepath
-var myColor = d3.scaleOrdinal(d3.schemePastel1) // A color scale: one color for each group
+var myColor = d3.scaleOrdinal()
+.domain(["Djokovic N.", "Federer R.", "Murray A.", "Nadal R.", "Hewitt L." , "Ivanisevic G."])
+.range(['#00529B','#007b22','#FDBB2F', '#F47A1F','#20B2AA', '#8BA1AD']);
+
+//var myColor = d3.scaleOrdinal(d3.schemePastel1) // A color scale: one color for each group
 
 // ---------------------- trying to provide area behind the line chart
 var points = []
 var points = [
-  { xpoint: 0, ypoint: 320 },
-  { xpoint: 750, ypoint: 320 }
+  { xpoint: 0, ypoint: 280 },
+  { xpoint: 750, ypoint: 280 }
 ];
 
 var points2 = []
 var points2 = [
-  { xpoint: 0, ypoint: 460 },
-  { xpoint: 750, ypoint: 460 }
+  { xpoint: 0, ypoint: 420 },
+  { xpoint: 750, ypoint: 420 }
 ];
 
 var points3 = []
 var points3 = [
-  { xpoint: 0, ypoint: 550 },
-  { xpoint: 750, ypoint: 550 }
+  { xpoint: 0, ypoint: 500 },
+  { xpoint: 750, ypoint: 500 }
 ];
 
 var Gen = d3.area()
@@ -221,12 +227,12 @@ var Gen = d3.area()
 
   var Gen2 = d3.area()
   .x((p) => p.xpoint)
-  .y0((p) => 320)
+  .y0((p) => 280)
   .y1((p) => p.ypoint);
 
   var Gen3 = d3.area()
   .x((p) => p.xpoint)
-  .y0((p) => 460)
+  .y0((p) => 420)
   .y1((p) => p.ypoint);
 
   linechart
@@ -263,7 +269,7 @@ const barsvg = d3.select("#chart-bar").append("svg")
 
 var barchart = barsvg.append("g")
     .attr("class", "bar")
-    .attr("transform", "translate(" + (margin.left+50)+ "," + ((height-550)) + ")");
+    .attr("transform", "translate(" + (margin.left+50)+ "," + ((height-500)) + ")");
 
 var xbarScale = d3.scaleBand()
 .range([ 0, (width-50)]);
@@ -281,11 +287,11 @@ const ybarScaleGroup = barchart.append("g")
 
     // Labels
 const xbarLabel = barchart.append("text")
-.attr("y", height+40)
+.attr("y", height+50)
 .attr("x", width / 2)
 .attr("font-size", "20px")
 .attr("text-anchor", "middle")
-.text("Winner Set(W) / Opponent Set (L)")
+.text("Set Details")
 const ybarLabel = barchart.append("text")
 .attr("transform", "rotate(-90)")
 .attr("y", -40)
@@ -294,6 +300,23 @@ const ybarLabel = barchart.append("text")
 .attr("text-anchor", "middle")
 .text("Games Won")
 
+const playerLabel2 = barchart.append("text")
+.attr("y", height - 450)
+.attr("x", width / 2)
+.style('fill', '#007b22')
+.attr("font-size", "30px")
+.attr("text-anchor", "middle")
+.attr("opacity", "1")
+
+
+const ranklabel2 = barchart.append("text")
+	.attr("y", height - 390)
+	.attr("x", width/2)
+  .style('fill', '#007b22')
+	.attr("font-size", "30px")
+	.attr("opacity", "1s")
+	.attr("text-anchor", "middle")
+
 // ------------------------------ Annotations ------------------------------------
 
 const annotations = [
@@ -301,13 +324,13 @@ const annotations = [
     note: {
       label: "Due to Covid-19",
       title: "No Wimbledon Tournament",
-      wrap: 200,
+      wrap: 300,
       align: "middle"
     },
     connector: {
-      end: "arrow" // 'dot' also available
+      end: "dot" // 'dot' also available
     },
-    x: 720,
+    x: 570,
     y: 60,
     dy: -20,
     dx: -20
@@ -323,20 +346,23 @@ const annotations = [
 
   const annotations2 = [
     {
-      type: d3.annotationCalloutCircle,
       note: {
-        label: "If the line traverses this area or beyond , the Quarterfinal/Semifinals and Finals were against a tougher opponent",
-        title: "Getting to the Finale..",
-        wrap: 190
+        label: "If the line tranverses the red area then the matches were against a tougher opponent",
+        title: "Getting to the finals",
+        wrap: 300,
+        align: "middle"
+      },
+      connector: {
+        end: "dot" // 'dot' also available
       },
       //settings for the subject, in this case the circle radius
       subject: {
-        radius: 150
+        radius: 180
       },
-      x: 700,
-      y: 160,
-      dy: 50,
-      dx: -200
+      x: 400,
+      y: 120,
+      dy: 0,
+      dx: -100
     }].map(function(d){ d.color = "#ffab00"; return d})
   
     const makeAnnotations2 = d3.annotation()
@@ -350,51 +376,42 @@ const annotations = [
   
     const annotations3 = [
       {
-        type: d3.annotationCalloutCircle,
         note: {
           label: "Longest running Finale in Wimbeldon",
           title: "2019 Novak Djokovic (13) : Roger Federer(12)",
-          wrap: 250
+          wrap: 300,
+          align: "middle"
+        },
+        connector: {
+          end: "dot" // 'dot' also available
         },
         //settings for the subject, in this case the circle radius
         subject: {
           radius: 50
         },
-        x: 820,
+        x: 620,
         y: 160,
-        dy: 50,
-        dx: -200
-      },{
-        type: d3.annotationCalloutCircle,
-        note: {
-          label: "One of the longest matches in Wimbeldon",
-          title: "2009 Roger Federer(12): Andy Roddick (14)",
-          wrap: 250
-        },
-        //settings for the subject, in this case the circle radius
-        subject: {
-          radius: 50
-        },
-        x: 600,
-        y: 240,
         dy: 50,
         dx: -200
       }].map(function(d){ d.color = "#ffab00"; return d})
     
       const annotations4 = [
         {
-          type: d3.annotationCalloutCircle,
           note: {
             label: "One of the longest matches in Wimbeldon",
             title: "2009 Roger Federer(12): Andy Roddick (14)",
-            wrap: 250
+            wrap: 300,
+            align: "middle"
+          },
+          connector: {
+            end: "dot" // 'dot' also available
           },
           //settings for the subject, in this case the circle radius
           subject: {
             radius: 50
           },
-          x: 600,
-          y: 240,
+          x: 460,
+          y: 140,
           dy: 50,
           dx: -200
         }].map(function(d){ d.color = "#ffab00"; return d})
@@ -594,7 +611,9 @@ function drawLine(data){
   for (var i = 0; i < yearwinner.length; i++) {
     console.log("-----------for loop winner----------"+yearwinner[i].Winner)
     playerLabel.text(+slideryear+" Champion: " +yearwinner[i].Winner)
-    ranklabel.text("Seed: " +yearwinner[i].WRank)
+    // ranklabel.text("Seed: " +yearwinner[i].WRank)
+    playerLabel2.text(+formatDateIntoYear(yearwinner[i].Date)+" Champion: " +yearwinner[i].Winner)
+    ranklabel2.text("Seed: " +yearwinner[i].WRank)
   }
 
   // Setting Scales 
@@ -635,6 +654,7 @@ function drawLine(data){
 
   d3.selectAll("circle").data(clearAll).exit().remove() //this works but also removed slider circle
 
+
   dot.enter().append("circle")
       .attr("r", 5)
       .attr("cx", function(d) { return xScale(d.RoundId); })
@@ -657,6 +677,7 @@ function drawLine(data){
     .datum(data.filter(function(d){return formatDateIntoYear(d.Date)==slideryear})) 
             .attr("d" , linepath)
             .attr("stroke", "#007b22")// function(d){ return myColor(ValueA) })  // d.Winner --> ValueA
+            //.attr("stroke", function(d){ return myColor(d.Winner) })//   // d.Winner --> ValueA
             .style("stroke-width", 4)
             .style("fill", "none")
 
@@ -667,7 +688,10 @@ function drawLine(data){
 
 function drawBar(data){ 
   // Scales and axis
-
+  barsvg.append("circle").attr("cx",120).attr("cy",100).attr("r", 4).style("fill", "#007b22") 
+  barsvg.append("circle").attr("cx",120).attr("cy",120).attr("r", 4).style("fill", "#b8babd")
+  barsvg.append("text").attr("x", 140).attr("y", 100).text("Winner").style("font-size", "10px").attr("alignment-baseline","middle")
+  barsvg.append("text").attr("x",140).attr("y", 120).text("Loser").style("font-size", "10px").attr("alignment-baseline","middle")
 
   console.log("From DrawBar - Slider year is"+slideryear)
   var getSetYear1 = data.filter(function(d){return formatDateIntoYear(d.Date)==slideryear})
@@ -680,7 +704,10 @@ function drawBar(data){
   console.log(" Filtered data from drawbar mactching rows"+getSetYear1)
 
   xbarScale.domain(getSetYear1.map(function(d) { return d.Loser; })).padding(0.2)
-  xbarScaleGroup.call(d3.axisBottom(xbarScale).tickFormat(d=>  "Winner vs "+d))  
+  xbarScaleGroup.call(d3.axisBottom(xbarScale).tickFormat(d=>  "VS: "+d))
+  .selectAll("text")
+  .attr("transform", "translate(-10,0)rotate(-15)")
+  .style("text-anchor", "end");
 
   ybarScale.domain([0,18])
   ybarScaleGroup.call(d3.axisLeft(ybarScale).ticks(18))//.tickFormat(d3.format(".3")))
@@ -746,7 +773,7 @@ function drawBar2(data){  ///// this function is called from year drop down. so 
   var groups = d3.map(data, function(d){return(d.Loser)}).keys()
 
   xbarScale.domain(data.map(function(d) { return d.Loser; })).padding(0.2)
-  xbarScaleGroup.call(d3.axisBottom(xbarScale).tickFormat(d=>  "Winner vs "+d))  
+  xbarScaleGroup.call(d3.axisBottom(xbarScale).tickFormat(d=>  "VS: "+d))  
 
   ybarScale.domain([0,18])
   ybarScaleGroup.call(d3.axisLeft(ybarScale).ticks(18))//.tickFormat(d3.format(".3")))
@@ -816,7 +843,9 @@ function drawLine2(data){  ////// Draw Line based on Year drop down
   for (var i = 0; i < yearwinner.length; i++) {
     console.log("-----------for loop winner----------"+yearwinner[i].Winner)
     playerLabel.text(+formatDateIntoYear(yearwinner[i].Date)+" Champion: " +yearwinner[i].Winner)
-    ranklabel.text("Seed: " +yearwinner[i].WRank)
+    // ranklabel.text("Seed: " +yearwinner[i].WRank)
+    playerLabel2.text(+formatDateIntoYear(yearwinner[i].Date)+" Champion: " +yearwinner[i].Winner)
+    ranklabel2.text("Seed: " +yearwinner[i].WRank)
   }
 
   // Setting Scales 
@@ -879,6 +908,7 @@ function drawLine2(data){  ////// Draw Line based on Year drop down
 //    .datum(data.filter(function(d){return formatDateIntoYear(d.Date)==slideryear})) 
             .attr("d" , linepath)
             .attr("stroke", "#007b22")// function(d){ return myColor(ValueA) })  // d.Winner --> ValueA
+            //.attr("stroke", function(d){ return myColor(d.Winner) })
             .style("stroke-width", 4)
             .style("fill", "none")
 }
